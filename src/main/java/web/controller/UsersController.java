@@ -1,5 +1,6 @@
 package web.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -7,12 +8,9 @@ import web.model.User;
 import web.service.UserService;
 
 @Controller
+@RequiredArgsConstructor
 public class UsersController {
     private final UserService userService;
-
-    public UsersController(UserService userService) {
-        this.userService = userService;
-    }
 
     @GetMapping("/")
     public String findAll(Model model) {
@@ -26,15 +24,9 @@ public class UsersController {
         return "user";
     }
 
-    @PostMapping("/create")
+    @PostMapping("/save")
     public String create(User user) {
-        userService.create(user);
-        return "redirect:/";
-    }
-
-    @PostMapping("/{id}/update")
-    public String update(@ModelAttribute User user) {
-        userService.update(user);
+        userService.save(user);
         return "redirect:/";
     }
 

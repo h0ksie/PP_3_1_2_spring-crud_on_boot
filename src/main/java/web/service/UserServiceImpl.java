@@ -1,45 +1,38 @@
 package web.service;
 
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import web.dao.UserDao;
 import web.model.User;
-
+import web.repository.UserRepository;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final UserDao userDao;
-
+    final UserRepository userRepository;
     @Override
     public User getUserById(Long id) {
-        return userDao.getUserById(id);
+        return userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Пользователь с id " + id + " не найден"));
     }
 
     @Override
     public List<User> findAll() {
-        return userDao.listUsers();
+        return userRepository.findAll();
     }
 
     @Transactional
     @Override
-    public void create(User user) {
-        userDao.add(user);
+    public void save(User user) {
+        userRepository.save(user);
     }
-
-    @Transactional
-    @Override
-    public void update(User user) {
-        userDao.update(user);
-    }
-
     @Transactional
     @Override
     public void delete(Long id) {
-        userDao.delete(id);
+        userRepository.deleteById(id);
     }
 
 }
